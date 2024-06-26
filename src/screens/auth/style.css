@@ -1,0 +1,64 @@
+.label-input {
+    display: flex;
+    position: relative;
+}
+
+.input-tag {
+    width: 100%;
+    height: 50px;
+    border-radius: 4px;
+    padding: 16px;
+    padding-right: 40px;
+    font-size: 16px;
+    text-overflow: ellipsis;
+    border-radius: 10px;
+    border: 1px solid #D0D5DD;
+}
+
+#icon {
+    position: relative;
+    right: 42px;
+    top: 16px;
+    width: 24px;
+    height: 24px;
+}
+
+/* Bottom Text */
+.bottom_text {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+}
+
+/* Success Tick */
+.success-tick {
+    margin: auto;
+    text-align: center;
+}
+
+/* Animation For auth Screens */
+
+.animate-auth-div {
+    animation: authFadeIn 0.7s ease-in both;
+}
+
+@keyframes authFadeIn {
+    from {
+        opacity: 1;
+        transform: translate3d(-60%, 0, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* Responsiveness */
+@media screen and (max-width: 1280px) {
+    .success-tick {
+        margin-top: 200px;
+    }
+}

@@ -1,0 +1,54 @@
+.user-div {
+    background-color: #F9F9F9 !important;
+    height: 760px !important;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+thead>tr>th {
+    background-color: #f1f5fd;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(odd) {
+    background-color: #fff !important;
+}
+
+tr:nth-child(even) {
+    background-color: #f1f5fd !important;
+}
+
+#icon {
+    position: relative;
+    right: 42px;
+    top: 16px;
+    width: 24px;
+    height: 24px;
+    color: #D0D5DD;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 1280px) {
+    .input-tag {
+        width: 100%;
+    }
+
+    .user-div {
+        height: 980px !important;
+    }
+}
+
+/* Responsiveness */
+@media screen and (max-width: 1024px) {
+    .user-div {
+        height: 900px !important;
+    }
+}

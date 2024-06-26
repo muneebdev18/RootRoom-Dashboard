@@ -1,0 +1,33 @@
+.pin_input_container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.pin_input {
+    width: 75px;
+    height: 75px;
+    font-size: 18px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.pin_input:last-child {
+    margin-right: 0;
+}
+
+.pin_main {
+    margin: auto;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 380px) {
+    .pin_input {
+        width: 45px;
+        height: 45px;
+    }
+}

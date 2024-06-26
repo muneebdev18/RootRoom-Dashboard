@@ -1,0 +1,41 @@
+.dash-div {
+    background-color: #F9F9F9 !important;
+    height: 1020px !important;
+}
+
+.chart-line {
+    height: 500px !important;
+    background-color: #FFFFFF;
+    border-radius: 30px;
+    margin-bottom: 32px;
+    margin-top: 48px;
+    padding: 32px;
+    margin-right: 15px;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 1535px) {
+    .dash-div {
+        height: 1220px !important;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .dash-div {
+        height: 1180px !important;
+    }
+
+    .chart-line {
+        height: 400px !important;
+    }
+}
+
+@media screen and (max-width: 639px) {
+    .dash-div {
+        height: 1420px !important;
+    }
+
+    .chart-line {
+        height: 400px !important;
+    }
+}

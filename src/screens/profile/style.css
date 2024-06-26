@@ -1,0 +1,36 @@
+.profile-div {
+    background-color: #F9F9F9 !important;
+    height: 1000px !important;
+}
+
+.label-input {
+    display: flex;
+    position: relative;
+}
+
+.input-tag {
+    width: 900px;
+    height: 50px;
+    border-radius: 4px;
+    padding: 16px;
+    padding-right: 40px;
+    font-size: 16px;
+    text-overflow: ellipsis;
+    border-radius: 10px;
+    border: 1px solid #D0D5DD;
+}
+
+#icon {
+    position: relative;
+    right: 42px;
+    top: 16px;
+    width: 24px;
+    height: 24px;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 640px) {
+    .input-tag {
+        width: 100%;
+    }
+}

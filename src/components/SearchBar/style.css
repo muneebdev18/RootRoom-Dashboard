@@ -1,0 +1,34 @@
+.container {
+    position: relative;
+    width: 220px;
+}
+
+.container .search-input {
+    font-size: 14px;
+    max-width: 0;
+    padding: 15px;
+    transition: all 0.5s ease;
+    box-sizing: border-box;
+    opacity: 0;
+    outline: none;
+    border: none;
+    border-radius: 50px;
+}
+
+.container .search-expanded {
+    max-width: 200px;
+    opacity: 1;
+}
+
+.container .search-wrapper {
+    z-index: 1;
+    width: 35px;
+    height: 45px;
+    position: absolute;
+    right: 0;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding-top: 4px;
+    font-size: 18px;
+}

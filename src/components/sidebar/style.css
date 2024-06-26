@@ -1,0 +1,42 @@
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    /* width: 100%; */
+    padding-left: 28px;
+    padding-bottom: 10px;
+    /* padding: 10px; */
+}
+
+/* Animate sidebar */
+.animate-sidebar-div {
+    animation: sidebarFadeIn 0.5s ease-in both;
+}
+
+@keyframes sidebarFadeIn {
+    from {
+        opacity: 1;
+        transform: translate3d(-90%, 0, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.animate-sidebarFadeOut-div {
+    animation: sidebarFadeOut 0.5s ease-in both;
+}
+
+@keyframes sidebarFadeOut {
+    from {
+        opacity: 1;
+        transform: translate3d(90%, 0, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
