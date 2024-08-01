@@ -30,15 +30,20 @@ import {
 } from "./screens";
 import GroupDetails from "./screens/groupmanagement/GroupDetails";
 import { ProtectedRoute, PublicRoute } from "./middlewares/RouteProtected";
+import NotFound from "./screens/notFound";
+import VerifyEmail from "./screens/verifyEmail";
 function App() {
   // Local Stroage Admin Data
   const adminData = JSON.parse(localStorage.getItem("admin_user"));
-  const isAuthenticated = true;
+  const isAuthenticated = !!adminData;
+  
   return (
     <>
       <div>
         <div className="w-full overflow-hidden">
           <Routes>
+            <Route path="*" element={<NotFound/>}/>
+            <Route path="/users/:id/verify/:token" element={<VerifyEmail/>}/>
             <Route path="/" element={<Splash />} />
             <Route
               path="/login"
@@ -104,7 +109,7 @@ function App() {
                 />
               }
             />
-            <Route
+            {/* <Route
               path="/adminmanagement"
               element={
                 <ProtectedRoute
@@ -121,7 +126,7 @@ function App() {
                   element={<AdminDetails />}
                 />
               }
-            />
+            /> */}
             <Route
               path="/interest"
               element={
@@ -154,7 +159,7 @@ function App() {
               }
             />
             <Route
-              path="/usermanagement/userdetails"
+              path="/usermanagement/userdetails/:userId"
               element={
                 <ProtectedRoute
                   isAuthenticated={isAuthenticated}
@@ -172,7 +177,7 @@ function App() {
               }
             />
             <Route
-              path="/groupmanagement/groupdetails"
+              path="/groupmanagement/groupdetails/:id"
               element={
                 <ProtectedRoute
                   isAuthenticated={isAuthenticated}

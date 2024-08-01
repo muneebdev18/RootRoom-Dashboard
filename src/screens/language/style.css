@@ -1,6 +1,6 @@
 .sub-div {
     background-color: #F9F9F9 !important;
-    height: 1400px !important;
+    height: 780px !important;
 }
 
 table {
@@ -42,9 +42,9 @@ tr:nth-child(even) {
     }
 }
 
-/* Responsiveness */
+/* Responsiveness
 @media screen and (max-width: 1024px) {
     .sub-div {
         height: 900px !important;
     }
-}
+} */

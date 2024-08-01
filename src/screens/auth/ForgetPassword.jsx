@@ -1,17 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import "./style.css";
+import Loader from '../../components/loader/'
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { MdOutlineHighlightOff } from "react-icons/md";
-
 import Logo2 from "../../assets/images/Coverimage.png";
-import "./style.css";
-
+import { useDispatch,useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { forgotPasswordApi,clearForgotPassword } from "../../app/features/auth/auth";
 const ForgetPassword = () => {
   // For password eye button
   const [email, setEmail] = useState("");
+  const dispatch = useDispatch()
+  const { message, success, isLoading,data } = useSelector((value) => value.Auth)
+  const navigate = useNavigate()
 
+  // ------------- Forgot Password API Handler ---------------------
   const handleSubmit = (e) => {
     e.preventDefault();
-    window.location.href = "/verifycode";
+    dispatch(forgotPasswordApi({
+      email:email
+    }))
   };
 
   // remove value
@@ -19,6 +28,31 @@ const ForgetPassword = () => {
     setEmail("");
   };
 
+  useEffect(()=>{
+    if(success === true){
+      toast.success(message,{
+        position:"top-right"
+      })
+      setEmail("")
+      navigate("/verifycode",{state:{data:data}})
+      dispatch(clearForgotPassword())
+    }
+    else if(success === null){
+      return;
+    }
+    else{
+      toast.error(message,{
+        position:"top-right"
+      })
+      dispatch(clearForgotPassword())
+    }
+  },[success,message])
+  // ---------------- Styling For Loader -----------------
+  const loaderStyle = {
+    display:"flex",
+    justifyContent:"center",
+    alignItems:"center",
+  }
   return (
     <div className="flex flex-row bg-white">
       <div className="xl:w-1/2 sm:w-8/12 xsm:w-full h-screen xl:px-24 lg:px-0 xsm:px-0 xsm:pl-6 xl:mx-12 lg:mx-auto xsm:mx-auto animate-auth-div">
@@ -33,8 +67,8 @@ const ForgetPassword = () => {
         <form onSubmit={handleSubmit}>
           {/* Email */}
           <div className="pb-[15px]">
-            <label className="text-[#344054]">Email</label>
-            <label className="label-input">
+            <label className="text-[#344054]">Email:</label>
+            <label className="label-input  mt-1">
               <input
                 name="copy-button"
                 value={email}
@@ -43,16 +77,14 @@ const ForgetPassword = () => {
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
               />
-              {email ? (
+              {email.length > 0 &&(
                 <MdOutlineHighlightOff
                   color="#667085"
                   onClick={handleRemove}
                   id="icon"
                   className="cursor-pointer"
                 />
-              ) : (
-                <p className="pr-6"></p>
-              )}
+              ) }
             </label>
           </div>
 
@@ -62,7 +94,8 @@ const ForgetPassword = () => {
                 type="submit"
                 className="rounded-[10px] text-white hover:bg-[#3a2a88] transition-transform bg-[#070029] h-[50px] w-full text-[14px]"
               >
-                Continue
+                {isLoading ? <Loader loaderStyle={loaderStyle}/>:"Continue"}
+                
               </button>
             </div>
           </div>

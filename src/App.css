@@ -13,6 +13,9 @@
   background: #070029; 
   border-radius: 10px; /* Adjust the border-radius to curve the scrollbar thumb */
 }
+
+
+/* ------ Image Gallery Css --------------*/
 img.image-gallery-image {
   overflow: hidden;
   border-radius: 8px !important}
@@ -30,3 +33,5 @@ img.image-gallery-thumbnail-image {
   width: 100% !important;
   height: 80px !important;
   object-fit: cover !important;}
+
+/* ============================*/

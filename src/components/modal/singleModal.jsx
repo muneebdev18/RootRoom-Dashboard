@@ -48,7 +48,7 @@ const singleModal = ({ con }) => {
                                 >Yes</button>
                                 <button
                                     onClick={cancelLogOut}
-                                    className='text-[#4F4F4F] bg-white border-2 border-[#4F4F4F] text-hoverbg sm:px-20 xsm:px-10 py-2 rounded-lg mt-4 transition hover:bg-[#4F4F4F] hover:text-white hover:font-bold'
+                                    className='text-[#4F4F4F] bg-white border-2 border-[#070029] text-hoverbg sm:px-20 xsm:px-10 py-2 rounded-lg mt-4 transition hover:bg-[#070029] hover:text-white '
                                 >No</button>
                             </div>
                         </div>

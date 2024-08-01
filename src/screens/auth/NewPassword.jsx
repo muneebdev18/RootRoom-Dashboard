@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MdRemoveRedEye } from "react-icons/md";
 import { AiFillEyeInvisible } from "react-icons/ai";
-
+import { useLocation } from "react-router-dom";
 import Logo2 from "../../assets/images/Coverimage.png";
+import { useDispatch, useSelector } from "react-redux";
+import { clearNewPassword, newPasswordApi } from "../../app/features/auth/auth";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import Loader from "../../components/loader";
 const NewPassword = () => {
   const [values, setValues] = useState({
     password: "",
@@ -10,26 +15,49 @@ const NewPassword = () => {
     showPassword: true,
     showConfirmPassword: true,
   });
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { success, isLoading, data, message } = useSelector((value) => value.Auth)
+  // -------- Recieving Data from Verification Code --------
+  const location = useLocation()
+  const tempData = location?.state?.tempData
 
-  // new password
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword });
-  };
-
-  // confirm password
-  const handleConfirmPassword = () => {
-    setValues({ ...values, showConfirmPassword: !values.showConfirmPassword });
-  };
-
-  const handlePasswordChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    window.location.href = "/success";
+
+    dispatch(newPasswordApi({
+      adminId: tempData?.userId,
+      password: values?.password,
+      confirmPassword: values?.confirmPassword
+    }))
   };
 
+  useEffect(() => {
+    if (success === true) {
+      toast.success(message, {
+        position: "top-right"
+      })
+      navigate("/success")
+      setValues({ ...values, password: "", confirmPassword: "" })
+      dispatch(clearNewPassword())
+    }
+    else if (success === null) {
+      return;
+    }
+    else {
+      toast.error(message, {
+        position: "top-right"
+      })
+      dispatch(clearNewPassword())
+
+    }
+  }, [success, message])
+  const loaderStyle = {
+    display:"flex",
+    justifyContent:"center",
+    alignItems:"center",
+  }
   return (
     <div className="flex flex-row bg-white">
       <div className="xl:w-1/2 sm:w-8/12 xsm:w-full h-screen xl:px-24 lg:px-0 xsm:px-0 xsm:pl-6 xl:mx-12 lg:mx-auto xsm:mx-auto animate-auth-div">
@@ -52,9 +80,10 @@ const NewPassword = () => {
                 className="input-tag"
                 placeholder="Enter New Password"
                 type={values.showPassword ? "password" : "text"}
-                onChange={handlePasswordChange("password")}
+                onChange={(e) => setValues({ ...values, password: e.target.value })}
+                value={values?.password}
               />
-              <div onClick={handleClickShowPassword}>
+              <div onClick={() => setValues({ ...values, showPassword: !values.showPassword })}>
                 {values.showPassword ? (
                   <MdRemoveRedEye
                     color="#667085"
@@ -82,9 +111,10 @@ const NewPassword = () => {
                 className="input-tag"
                 placeholder="Confirm Password"
                 type={values.showConfirmPassword ? "password" : "text"}
-                onChange={handlePasswordChange("password")}
+                onChange={(e) => setValues({ ...values, confirmPassword: e.target.value })}
+                value={values?.confirmPassword}
               />
-              <div onClick={handleConfirmPassword}>
+              <div onClick={() => setValues({ ...values, showConfirmPassword: !values.showConfirmPassword })}>
                 {values.showConfirmPassword ? (
                   <MdRemoveRedEye
                     color="#667085"
@@ -108,7 +138,8 @@ const NewPassword = () => {
                 type="submit"
                 className="rounded-[10px] text-white hover:bg-[#3a2a88] transition-transform bg-[#070029] h-[50px] w-full text-[14px]"
               >
-                Update Password
+                {isLoading ? <Loader loaderStyle={loaderStyle}/>:"Update Password"}
+               
               </button>
             </div>
           </div>

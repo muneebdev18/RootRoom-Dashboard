@@ -16,18 +16,12 @@ const pagelinks = [
     icon: <MdDashboard color="#898989" size={24} />,
     name: "Dashboard",
   },
-  {
-    // User Management
-    page: "adminmanagement",
-    icon: <MdDomain color="#898989" size={24} />,
-    name: "Admin Management",
-  },
-  {
-    // Reports Management
-    page: "usermanagement",
-    icon: <MdAssignment color="#898989" size={24} />,
-    name: "User Management",
-  },
+  // {
+  //   // User Management
+  //   page: "adminmanagement",
+  //   icon: <MdDomain color="#898989" size={24} />,
+  //   name: "Admin Management",
+  // },
   {
     // Players Management
     page: "interest",
@@ -40,6 +34,13 @@ const pagelinks = [
     icon: <MdAccountBox color="#898989" size={24} />,
     name: "Language",
   },
+  {
+    // Reports Management
+    page: "usermanagement",
+    icon: <MdAssignment color="#898989" size={24} />,
+    name: "User Management",
+  },
+  
   {
     page:"groupmanagement",
     icon: <MdEventNote color="#898989" size={24} />,

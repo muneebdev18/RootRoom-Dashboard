@@ -1,7 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { MdTimeline } from 'react-icons/md';
-
 import { selectLogout } from '../../features/modal'
 import Header from '../../components/header';
 import Sidebar from '../../components/sidebar';

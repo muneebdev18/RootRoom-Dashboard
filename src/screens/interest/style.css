@@ -7,7 +7,10 @@ table {
     border-collapse: collapse;
     width: 100%;
 }
+.pngFilter{
+    filter: sepia(0.5) hue-rotate(180deg) brightness(0.5);
 
+}
 th,
 td {
     text-align: left;

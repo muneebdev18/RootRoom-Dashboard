@@ -1,28 +1,30 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
+import { BASE_URL } from "../../app/constants";
 import {
   MdMenu,
   MdPerson,
   MdLogout,
-  MdKeyboardArrowDown
-
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp
 } from "react-icons/md";
+
+
 import { IoMdNotifications } from "react-icons/io";
 import {
   selectNotiModal,
   selectLogout,
   changeLogout,
 } from "../../features/modal";
+import Loader from '../../components/loader/index'
 import { changeActiveMenu, changeMobileMenu } from "../../features/menubar";
 import { selectScreenSize } from "../../features/screenSize";
 import SingleModal from "../../components/modal/singleModal";
 import Notification from "../Notification";
-
-
 import ProfilePic from "../../assets/images/Face.png";
 import "./style.css";
+import useSWR from "swr";
 
 const Header = ({ heading, content }) => {
   const [plopen, setplopen] = useState(false);
@@ -42,6 +44,23 @@ const Header = ({ heading, content }) => {
     setplopen(!plopen);
   };
 
+  // -------- Data from  Localstorage --------- 
+  const userData = JSON.parse(localStorage.getItem("admin_user"));
+  const token = userData?.token
+
+  // ------ Login User Data Api --------
+  const fetcherWithToken = async (url, ...args) => {
+    const response = await fetch(url, {
+      ...args,
+      headers: {
+        ...args.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.json();
+  };
+  const { data,isLoading,error } = useSWR([`${BASE_URL}admin/getLoggedInAdmin`], fetcherWithToken);
+
   return (
     <div className={`relative pb-12 ${logout ? "" : "z-10"}`}>
       {logout && <SingleModal con="Are you sure you want to logout?" />}
@@ -60,12 +79,12 @@ const Header = ({ heading, content }) => {
             />
 
             <div className="flex flex-col animate-header">
-              <h1 className="text-pageHeading xl:text-[30px] sm:text-[30px] xsm:text-[18px] font-bold">
+              <h1 className="text-pageHeading uppercase xl:text-[30px] sm:text-[30px] xsm:text-[18px] font-bold">
                 {heading}
               </h1>
-              <h3 className="text-content 2xl:contents md:contents xsm:hidden">
+              {/* <h3 className="text-content 2xl:contents md:contents xsm:hidden">
                 {content}
-              </h3>
+              </h3> */}
             </div>
             {showNoti && <Notification />}
             <div className="flex justify-center items-center gap-8">
@@ -75,18 +94,24 @@ const Header = ({ heading, content }) => {
                   onClick={profileLinks}
                 >
                   <img
-                    src={ProfilePic}
+                    src={data?.data?.profile}
                     alt="Profile"
                     className="rounded-[50%] w-8 h-8"
                   />
                   <p className="text-[#6F6C99] text-[13px] my-auto">
-                    Pixelz Warrios
+                    {isLoading ? <Loader/> : data?.data?.fullname}
                   </p>
-                  <MdKeyboardArrowDown
+                  {
+                    plopen ? <MdKeyboardArrowUp    color="#6F6C99"
+                    size={20}
+                    className="my-auto"/>:
+                    <MdKeyboardArrowDown
                     color="#6F6C99"
                     size={20}
                     className="my-auto"
                   />
+                  }
+                  
                 </div>
                 {plopen && (
                   <div className="absolute -bottom-12 right-12 bg-white rounded-xl shadow-md w-32 h-20 flex items-center pl-[10px]">
@@ -106,7 +131,7 @@ const Header = ({ heading, content }) => {
                         <p className="flex justify-start items-center gap-1 p-1 my-1">
                           <MdLogout color="#344054" size={22} />
                           <span className="text-sm text-gray-400 pl-2 pr-5">
-                            logOut
+                            Log Out
                           </span>
                         </p>
                       </li>
@@ -117,7 +142,7 @@ const Header = ({ heading, content }) => {
               <div className="2xl:hidden xl:hidden lg:hidden md:contents">
                 <div onClick={profileLinks}>
                   <img
-                    src={ProfilePic}
+                    src={data?.data?.profile}
                     alt="Profile"
                     className="rounded-[50%] w-10 h-10"
                   />

@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import DotLoader from "../../components/dotLoader";
-
 import Logo from "../../assets/images/LogoRootRoom.png";
 
 const Splash = () => {

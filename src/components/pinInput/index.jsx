@@ -1,19 +1,14 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 import PinInput from './PinInput';
 import './style.css';
 
-const Pin = () => {
-    let compPin = 1999;
+const Pin = ({setPinValue}) => {
+
     const handlePinComplete = (pin) => {
         pin = Number(pin);
-        if (pin === compPin) {
-            console.log('Correct PIN:', [pin, compPin]);
-        } else {
-            console.log('Incorrect PIN:', [pin, compPin]);
-        }
+        setPinValue(pin)
     };
-
     return (
         <div className="pin_main">
             <PinInput length={4} onComplete={handlePinComplete} />
@@ -21,4 +16,4 @@ const Pin = () => {
     )
 }
 
-export default Pin;
+export default memo(Pin);

@@ -1,29 +1,39 @@
 .dash-div {
     background-color: #F9F9F9 !important;
-    height: 1020px !important;
+    /* height: 1220px ; */
 }
 
 .chart-line {
-    height: 500px !important;
     background-color: #FFFFFF;
     border-radius: 30px;
     margin-bottom: 32px;
     margin-top: 48px;
     padding: 32px;
     margin-right: 15px;
-}
+    /* border: 1px solid rgb(184, 184, 184); */
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
-/* Responsiveness */
-@media screen and (max-width: 1535px) {
-    .dash-div {
-        height: 1220px !important;
+}
+.cardContainer{
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+@media (max-width:1980px) {
+    .dash-div{
+        height:1550px;
     }
 }
-
+@media (max-width:1600px) {
+    .dash-div{
+        height: 1400px;
+    }
+}
+@media (max-width:1200px) {
+    .dash-div{
+        height: 1450px;
+    }
+}
 @media screen and (max-width: 768px) {
-    .dash-div {
-        height: 1180px !important;
-    }
+
 
     .chart-line {
         height: 400px !important;
@@ -31,9 +41,7 @@
 }
 
 @media screen and (max-width: 639px) {
-    .dash-div {
-        height: 1420px !important;
-    }
+
 
     .chart-line {
         height: 400px !important;

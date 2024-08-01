@@ -1,6 +1,6 @@
 .rep-div {
     background-color: #F9F9F9 !important;
-    height: 1310px !important;
+    height: 800px !important;
 }
 
 .rep-details {
@@ -48,8 +48,8 @@ tr:nth-child(even) {
 }
 
 /* Responsiveness */
-@media screen and (max-width: 1024px) {
+/* @media screen and (max-width: 1024px) {
     .rep-div {
         height: 900px !important;
     }
-}
+} */

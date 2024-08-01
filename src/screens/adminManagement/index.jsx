@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-
 import { selectNotiModal, selectLogout } from "../../features/modal";
 import Header from "../../components/header";
 import Sidebar from "../../components/sidebar";
@@ -10,11 +9,11 @@ import UserData from "../../utils/userData";
 import "./style.css";
 import CreateAdminModal from "../../components/modal/CreateAdminModal";
 import {DeleteButton, EditButton} from "../../components/tableButtons/index";
+import useSWR from "swr";
+import { BASE_URL } from "../../app/constants";
 const UserManagement = () => {
 
 
-  const [toggle, setToggle] = useState(false);
-  const [clickedView, setClickedView] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerPage] = useState(10);
 
@@ -33,14 +32,23 @@ const UserManagement = () => {
   });
   const [userId, setUserId] = useState("");
 
+  // ----------- GET API Of All Admins -----------
+const adminData = JSON.parse(localStorage.getItem("admin_user"))
+const token = adminData?.token
+const fetcherWithToken = async (url,...args) => {
+  const response = await fetch(url, {
+    ...args,
+    headers: {
+      ...args.headers,
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.json();
+};
+const { data,isLoading,error } = useSWR([`${BASE_URL}admin/getAllAdmin`], fetcherWithToken);
+
   return (
     <div
-      onClick={() => {
-        if (toggle == true) {
-          setToggle(false);
-          setClickedView("");
-        }
-      }}
       className="user-div"
     >
       <Sidebar />
@@ -56,6 +64,7 @@ const UserManagement = () => {
                 onClick={() => {
                   setModalActive({ create: true });
                 }}
+                
                 className="bg-[#070029] text-white py-3 px-4 rounded-lg "
               >
                 Create Admin
@@ -67,6 +76,7 @@ const UserManagement = () => {
                 setModalActive={setModalActive}
                 title="Create Admin"
                 buttonName="Create Admin"
+                id="create-admin"
               />
             )}
             <div className="overflow-x-scroll lg:overflow-auto">
@@ -131,6 +141,7 @@ const UserManagement = () => {
                       defaultEmail="admin@example.com"
                       defaultPassword="password"
                       buttonName="Edit Admin"
+                      id="edit-admin"
                     />
                   )}
                 </tbody>

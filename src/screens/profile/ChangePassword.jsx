@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { MdRemoveRedEye } from "react-icons/md";
 import { AiFillEyeInvisible } from "react-icons/ai";
-
 import { selectScreenSize } from '../../features/screenSize';
-import { selectUpdateProfile, changeUpdateProfile } from '../../features/modal'
+import { selectUpdateProfile } from '../../features/modal'
 import Header from '../../components/header';
 import Sidebar from '../../components/sidebar';
 import UpdateModal from '../../components/modal/UpdateModal';
 
-import PlayerAvatar from '../../assets/images/playerAvatar.png';
-import Cover from '../../assets/images/cover.png';
 import './style.css';
+import useSWR from 'swr';
+import { BASE_URL } from '../../app/constants';
+import { clearUpdateAdminPassword, updateAdminPassword } from '../../app/features/admin/adminSlice';
+import { toast } from 'react-toastify';
+import Loader from '../../components/loader';
 
 const ChangePassword = () => {
     // For password eye button
@@ -43,10 +45,63 @@ const ChangePassword = () => {
         setValues({ ...values, showConfPassword: !values.showConfPassword });
     }
 
-    const handlePasswordChange = (prop) => (event) => {
-        setValues({ ...values, [prop]: event.target.value });
+    const changePasswordHandler = () =>{
+        dispatch(updateAdminPassword({
+            currentPassword:values?.currPassword,
+            newPassword:values?.newPassword,
+            confirmPassword:values?.confirmPassword
+        }))
     }
 
+    const {success,message,isLoading:loading} = useSelector((value)=>value.Admin)
+    useEffect(()=>{
+        if(success) {
+            toast.success(message, {
+                position: "top-right"
+            })
+            dispatch(clearUpdateAdminPassword())
+            setValues({
+                currPassword: "",
+                showCurrPassword: true,
+                newPassword: "",
+                showNewPassword: true,
+                confirmPassword: "",
+                showConfPassword: true
+            })
+        }
+        else if(success === null) {
+            return ;
+        }
+        else{
+            toast.error(message, {
+                position: "top-right"
+            })
+            dispatch(clearUpdateAdminPassword())
+        }
+    },[message,success])
+    // Data from LocalStorage
+    const adminData = JSON.parse(localStorage.getItem("admin_user"));
+    const token = adminData?.token;
+
+    // ---- GET Profile Api --------------------------------
+    const fetcherWithToken = async (url, ...args) => {
+        const response = await fetch(url, {
+            ...args,
+            headers: {
+                ...args.headers,
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.json();
+    };
+    const { data, isLoading, error } = useSWR([`${BASE_URL}admin/getLoggedInAdmin`], fetcherWithToken);
+ 
+    const loaderStyle = {
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+    }
     return (
         <div className='profile-div'>
             {
@@ -57,10 +112,25 @@ const ChangePassword = () => {
             <div className='lg:w-[calc(100%-220px)] md:w-full xsm:w-full float-right'>
                 <div className='py-10 xl:m-8 sm:m-8 xsm:m-0 rounded-[11px]'>
                     <div className={`2xl:pl-8 lg:pl-8 md:pl-0 xsm:pl-0 ${screensize < 641 && 'mx-2'}`}>
-                        <img src={Cover} alt='Cover' className='w-full h-48 rounded-t-3xl object-cover' />
+                        <div className='w-full h-48 rounded-t-3xl object-cover  bg- bg-[#070029] ' ></div>
                         <div className='flex 2xl:flex-row sm:flex-row xsm:flex-col relative bg-[#070029] w-full 2xl:h-28 sm:h-28 xsm:h-24 2xl:justify-between sm:justify-between xsm:justify-center'>
                             <div className='relative 2xl:bottom-16 sm:bottom-16 xsm:bottom-4 2xl:left-8 sm:left-8 xsm:left-0 2xl:mx-0 sm:mx-0 xsm:mx-auto'>
-                                <img src={PlayerAvatar} alt='Player Avatar' className='sm:w-36 xsm:w-28 sm:h-36 xsm:h-28 object-cover rounded-[50%]' />
+                                {
+                                    isLoading ? (
+                                        <div role="status" class="space-y-8 animate-pulse md:space-y-0 md:space-x-8 rtl:space-x-reverse md:flex md:items-center">
+
+                                            <div class="flex items-center justify-center w-36 rounded-[50%] h-36 bg-gray-300  dark:bg-gray-700">
+                                                <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                                                    <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className='relative'>
+                                            <img src={data?.data?.profile} alt='Admin' className='sm:w-36 xsm:w-28 sm:h-36 xsm:h-28 object-cover rounded-[50%]' />
+                                        </div>
+                                    )
+                                }
                             </div>
                         </div>
                     </div>
@@ -72,7 +142,9 @@ const ChangePassword = () => {
                                 <input
                                     name="copy-button" aria-label="copy-button" className='input-tag'
                                     type={values.showCurrPassword ? "password" : "text"}
-                                    onChange={handlePasswordChange("password")}
+                                   
+                                    value={values.currPassword}
+                                    onChange={(e)=>setValues({...values,currPassword: e.target.value})}
                                 />
                                 <div onClick={handleClickCurrPassword}>
                                     {
@@ -93,7 +165,8 @@ const ChangePassword = () => {
                                 <input
                                     name="copy-button" aria-label="copy-button" className='input-tag'
                                     type={values.showNewPassword ? "password" : "text"}
-                                    onChange={handlePasswordChange("password")}
+                                    value={values.newPassword}
+                                    onChange={(e)=>setValues({...values,newPassword: e.target.value})}
                                 />
                                 <div onClick={handleClickNewPassword}>
                                     {
@@ -113,8 +186,9 @@ const ChangePassword = () => {
                             <label htmlFor="copy-button" className='label-input'>
                                 <input
                                     name="copy-button" aria-label="copy-button" className='input-tag'
-                                    type={values.showConfPassword ? "password" : "text"}
-                                    onChange={handlePasswordChange("password")}
+                                    value={values.confirmPassword}
+                                    onChange={(e)=>setValues({...values,confirmPassword: e.target.value})}
+                                    type={values.showCurrPassword ? "password" : "text"}
                                 />
                                 <div onClick={handleConfirmPassword}>
                                     {
@@ -131,9 +205,9 @@ const ChangePassword = () => {
                         <div className='flex sm:flex-row xsm:flex-col sm:mr-0 xsm:mr-6'>
                             <div className={`${screensize < 641 && 'w-full'} py-8 2xl:mx-0 sm:mx-0 xsm:mx-auto`}>
                                 <button
-                                    onClick={() => dispatch(changeUpdateProfile())}
-                                    className='flex flex-row items-center justify-center sm:w-60 xsm:w-full bg-[#070029] text-white p-4 rounded-lg text-[20px]'
-                                >Update</button>
+                                    onClick={changePasswordHandler}
+                                    className='flex h-[64px] flex-row items-center justify-center sm:w-60 xsm:w-full bg-[#070029] text-white p-4 rounded-lg text-[20px]'
+                                >{loading ? <Loader loaderStyle={loaderStyle}/> :"Update"}</button>
                             </div>
                         </div>
                     </div>

@@ -2,7 +2,6 @@ import React from 'react';
 import { BsFillTrash3Fill } from "react-icons/bs";
 import { useSelector } from 'react-redux';
 import { MdCheckCircleOutline } from "react-icons/md";
-
 import { selectScreenSize } from '../../features/screenSize';
 import Header from '../../components/header';
 import Sidebar from '../../components/sidebar';

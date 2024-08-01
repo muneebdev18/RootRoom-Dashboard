@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { AiOutlineClose, AiOutlineCheckCircle } from "react-icons/ai";
 
@@ -83,4 +83,4 @@ const MultiModal = ({ con, sub, suc }) => {
     )
 }
 
-export default MultiModal;
+export default memo(MultiModal);

@@ -43,7 +43,9 @@
 .animate-auth-div {
     animation: authFadeIn 0.7s ease-in both;
 }
-
+input[type='checkbox'] {
+    accent-color: #070029;
+  }
 @keyframes authFadeIn {
     from {
         opacity: 1;

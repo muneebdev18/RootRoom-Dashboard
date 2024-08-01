@@ -1,20 +1,63 @@
 import React, { useState, useEffect } from "react";
 import Pin from "../../components/pinInput";
 import Logo2 from "../../assets/images/Coverimage.png";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { verifyCodeApi,clearVerifyCode } from "../../app/features/auth/auth";
+import { toast } from "react-toastify";
+import Loader from "../../components/loader";
 const VerificationCode = () => {
-  const [timer, setTimer] = useState(30);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    window.location.href = "/newpassword";
-  };
-
+  const [timer, setTimer] = useState(60);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const {message,success,isLoading,data} = useSelector((value)=>value.Auth)
   useEffect(() => {
     const time = timer > 0 && setInterval(() => setTimer(timer - 1), 1000);
-
     return () => clearInterval(time);
   }, [timer]);
 
+  // ------------ State for getting PIN Input Value -------------
+  const [pinValue, setPinValue] = useState()
+
+  //  -------- Data recieved from Forget Password ----------
+  const location = useLocation()
+  const tempData = location?.state?.data
+
+// ------------------ Verify Code API Dispatching ---------------------
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(verifyCodeApi({
+      userId:tempData?.userId,
+      code: pinValue,
+    }))
+  };
+
+  useEffect(()=>{
+    if(success === true){
+      toast.success(message,{
+        position:"top-right"
+      })
+      navigate("/newpassword",{state:{tempData:tempData}})
+      dispatch(clearVerifyCode())
+      setPinValue('')
+    }
+    else if(success === null){
+      return;
+    }
+    else{
+      toast.error(message,{
+        position:"top-right"
+      })
+      dispatch(clearVerifyCode())
+
+    }
+  },[message,success])
+// ---------------- Styling For Loader -----------------
+const loaderStyle = {
+  display:"flex",
+  justifyContent:"center",
+  alignItems:"center",
+}
   return (
     <div className="flex flex-row bg-white">
       <div className="xl:w-1/2 sm:w-9/12 xsm:w-full h-screen xl:px-40 lg:px-44 md:px-32 xsm:px-6 xl:mx-12 lg:mx-auto xsm:mx-auto animate-auth-div">
@@ -28,7 +71,7 @@ const VerificationCode = () => {
         <form onSubmit={handleSubmit}>
           {/* Verification Code */}
           <div className="pb-[15px]">
-            <Pin />
+            <Pin pinValue={pinValue} setPinValue={setPinValue} />
           </div>
           <p className="text-center text-[#F2451C]">
             00:{timer < 10 ? `0${timer}` : timer}
@@ -39,7 +82,8 @@ const VerificationCode = () => {
               type="submit"
               className="rounded-[10px] text-white  hover:bg-[#3a2a88] transition-transform bg-[#070029] h-[50px] w-full text-[14px]"
             >
-              Continue
+              {isLoading ? <Loader loaderStyle={loaderStyle}/>:"Continue"}
+              
             </button>
           </div>
           {timer < 1 && (
